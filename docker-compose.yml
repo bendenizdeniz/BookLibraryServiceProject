@@ -1,0 +1,34 @@
+
+version: "3.9"
+
+services:
+  postgre: 
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: BookLibrary
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - library_network
+
+  library_service:
+    build:
+      context: .
+      dockerfile: .\BookLibraryAPI\Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgre
+    networks:
+      - library_network
+
+volumes:
+  postgres_data:
+
+networks:
+  library_network: 
